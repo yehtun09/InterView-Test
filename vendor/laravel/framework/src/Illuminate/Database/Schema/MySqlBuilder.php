@@ -40,26 +40,26 @@ class MySqlBuilder extends Builder
     {
         $table = $this->connection->getTablePrefix().$table;
 
-        return count($this->connection->selectFromWriteConnection(
+        return count($this->connection->select(
             $this->grammar->compileTableExists(), [$this->connection->getDatabaseName(), $table]
         )) > 0;
     }
 
     /**
-     * Get the columns for a given table.
+     * Get the column listing for a given table.
      *
      * @param  string  $table
      * @return array
      */
-    public function getColumns($table)
+    public function getColumnListing($table)
     {
         $table = $this->connection->getTablePrefix().$table;
 
-        $results = $this->connection->selectFromWriteConnection(
-            $this->grammar->compileColumns($this->connection->getDatabaseName(), $table)
+        $results = $this->connection->select(
+            $this->grammar->compileColumnListing(), [$this->connection->getDatabaseName(), $table]
         );
 
-        return $this->connection->getPostProcessor()->processColumns($results);
+        return $this->connection->getPostProcessor()->processColumnListing($results);
     }
 
     /**

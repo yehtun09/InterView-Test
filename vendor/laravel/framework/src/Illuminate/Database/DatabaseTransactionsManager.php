@@ -2,23 +2,14 @@
 
 namespace Illuminate\Database;
 
-use Illuminate\Support\Collection;
-
 class DatabaseTransactionsManager
 {
     /**
-     * All of the committed transactions.
+     * All of the recorded transactions.
      *
-     * @var \Illuminate\Support\Collection<int, \Illuminate\Database\DatabaseTransactionRecord>
+     * @var \Illuminate\Support\Collection
      */
-    protected $committedTransactions;
-
-    /**
-     * All of the pending transactions.
-     *
-     * @var \Illuminate\Support\Collection<int, \Illuminate\Database\DatabaseTransactionRecord>
-     */
-    protected $pendingTransactions;
+    protected $transactions;
 
     /**
      * Create a new database transactions manager instance.
@@ -27,8 +18,7 @@ class DatabaseTransactionsManager
      */
     public function __construct()
     {
-        $this->committedTransactions = new Collection;
-        $this->pendingTransactions = new Collection;
+        $this->transactions = collect();
     }
 
     /**
@@ -40,7 +30,7 @@ class DatabaseTransactionsManager
      */
     public function begin($connection, $level)
     {
-        $this->pendingTransactions->push(
+        $this->transactions->push(
             new DatabaseTransactionRecord($connection, $level)
         );
     }
@@ -54,9 +44,10 @@ class DatabaseTransactionsManager
      */
     public function rollback($connection, $level)
     {
-        $this->pendingTransactions = $this->pendingTransactions->reject(
-            fn ($transaction) => $transaction->connection == $connection && $transaction->level > $level
-        )->values();
+        $this->transactions = $this->transactions->reject(function ($transaction) use ($connection, $level) {
+            return $transaction->connection == $connection &&
+                   $transaction->level > $level;
+        })->values();
     }
 
     /**
@@ -67,11 +58,13 @@ class DatabaseTransactionsManager
      */
     public function commit($connection)
     {
-        [$forThisConnection, $forOtherConnections] = $this->committedTransactions->partition(
-            fn ($transaction) => $transaction->connection == $connection
+        [$forThisConnection, $forOtherConnections] = $this->transactions->partition(
+            function ($transaction) use ($connection) {
+                return $transaction->connection == $connection;
+            }
         );
 
-        $this->committedTransactions = $forOtherConnections->values();
+        $this->transactions = $forOtherConnections->values();
 
         $forThisConnection->map->executeCallbacks();
     }
@@ -84,68 +77,20 @@ class DatabaseTransactionsManager
      */
     public function addCallback($callback)
     {
-        if ($current = $this->callbackApplicableTransactions()->last()) {
+        if ($current = $this->transactions->last()) {
             return $current->addCallback($callback);
         }
 
-        $callback();
+        call_user_func($callback);
     }
 
     /**
-     * Move all the pending transactions to a committed state.
-     *
-     * @param  string  $connection
-     * @return void
-     */
-    public function stageTransactions($connection)
-    {
-        $this->committedTransactions = $this->committedTransactions->merge(
-            $this->pendingTransactions->filter(fn ($transaction) => $transaction->connection === $connection)
-        );
-
-        $this->pendingTransactions = $this->pendingTransactions->reject(
-            fn ($transaction) => $transaction->connection === $connection
-        );
-    }
-
-    /**
-     * Get the transactions that are applicable to callbacks.
-     *
-     * @return \Illuminate\Support\Collection<int, \Illuminate\Database\DatabaseTransactionRecord>
-     */
-    public function callbackApplicableTransactions()
-    {
-        return $this->pendingTransactions;
-    }
-
-    /**
-     * Determine if after commit callbacks should be executed for the given transaction level.
-     *
-     * @param  int  $level
-     * @return bool
-     */
-    public function afterCommitCallbacksShouldBeExecuted($level)
-    {
-        return $level === 0;
-    }
-
-    /**
-     * Get all of the pending transactions.
+     * Get all the transactions.
      *
      * @return \Illuminate\Support\Collection
      */
-    public function getPendingTransactions()
+    public function getTransactions()
     {
-        return $this->pendingTransactions;
-    }
-
-    /**
-     * Get all of the committed transactions.
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function getCommittedTransactions()
-    {
-        return $this->committedTransactions;
+        return $this->transactions;
     }
 }
