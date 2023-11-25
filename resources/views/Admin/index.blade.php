@@ -17,7 +17,7 @@
                 @foreach ($users as $user)
 
                 <tr>
-                    <th scope="row">1</th>
+                    <th scope="row">{{ $loop->iteration }}</th>
                     <td>{{ $user->name}}</td>
                     <td>{{ $user->emp_code}}</td>
                     <td>{{ $user->email}}</td>

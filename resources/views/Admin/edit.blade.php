@@ -11,7 +11,7 @@
                 <input type="text" class="form-control" value="{{ $users->name }}" name="name">
 
                 <label for="" class="form-label mt-3">Employee Code</label>
-                <input type="text" class="form-control" value="{{ $users->emp_code }}" name="emp_code">
+                <input type="text" class="form-control" value="{{ $users->emp_code }}" name="emp_code" disabled>
 
                 <label for="" class="form-label mt-3">Email</label>
                 <input type="text" class="form-control" value="{{ $users->email }}" name="email">
