@@ -16,7 +16,6 @@
             <tbody>
                 @foreach ($users as $user)
 
-
                 <tr>
                     <th scope="row">1</th>
                     <td>{{ $user->name}}</td>
@@ -24,8 +23,8 @@
                     <td>{{ $user->email}}</td>
                     <td> <img src="{{ asset('/img/'.$user->img)}}" alt="" width="300px"></td>
                     <th>
-                        <a class="btn btn-primary" href="{{ route('user.edit',$user->id)}}">Edit</a>
-                        <form action="{{ route('user-delete', $user->id) }}" method="post">
+                        <a class="btn btn-primary" href="{{ route('users.edit',$user->id)}}">Edit</a>
+                        <form action="{{ route('users.destroy', $user->id) }}" method="post">
                             @csrf
                             @method('delete')
                             <div class="d-flex justify-content-end">

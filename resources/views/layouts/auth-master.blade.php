@@ -14,8 +14,10 @@
 
 <body>
 
-    <main class="form-signin text-center">
+    <main class="text-center mt-5">
+      <div class="container text-center">
         @yield('content')
+      </div>
     </main>
 </body>
 

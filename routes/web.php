@@ -30,11 +30,9 @@ Route::get('/locale/{locale}',function($locale){
 });
 Route::group(['namespace' => 'App\Http\Controllers'], function () {
 
-    // Route::resource('users','UserController');
+    Route::resource('users','UserController');
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
     Route::get('/admin',[ UserController::class , 'index'])->name('admin');
-    Route::delete('user-delete/{id}', [UserController::class, 'destroy'])->name('user-delete');
-    Route::get('user-edit/{id}', [UserController::class, 'edit'])->name('user.edit');
     Route::post('user-update/{id}', [UserController::class, 'update'])->name('users.update');
 
 
