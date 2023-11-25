@@ -17,7 +17,6 @@ class RegisterController extends Controller
     }
     public function register(RegisterRequest $request)
     {
-
         $imageName = time().'.'.$request->img->extension();
         $request->img->move(public_path('img'), $imageName);
 

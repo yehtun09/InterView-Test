@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\RegisterController;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 
@@ -27,14 +28,14 @@ Route::get('/locale/{locale}',function($locale){
 
     return redirect()->back();
 });
-Route::group(['namespace' => 'App/Http/Controllers'], function () {
+Route::group(['namespace' => 'App\Http\Controllers'], function () {
 
-    //home
+    // Route::resource('users','UserController');
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
-    Route::get('/admin',[ UserController::class , 'index']);
+    Route::get('/admin',[ UserController::class , 'index'])->name('admin');
     Route::delete('user-delete/{id}', [UserController::class, 'destroy'])->name('user-delete');
     Route::get('user-edit/{id}', [UserController::class, 'edit'])->name('user.edit');
-    Route::put('user-update/{id}', [UserController::class, 'update'])->name('user-update');
+    Route::post('user-update/{id}', [UserController::class, 'update'])->name('users.update');
 
 
 

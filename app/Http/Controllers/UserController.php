@@ -67,6 +67,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        // dd("Hello World");
         $users = $this->users->find($id);
         return view('Admin.edit', compact('users'));
     }
@@ -78,21 +79,25 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(RegisterRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        dd($request->all());
-        if($request->img)
-        {
-            $imageName = time().'.'.$request->img->extension();
+        $img = '';
+        if ($request->img) {
+            $imageName = time() . '.' . $request->img->extension();
             $request->img->move(public_path('img'), $imageName);
-        }else
-        {
-
+            $img = $imageName;
+        } else {
+            $img = $request->hd_img;
         }
-
-        $users = $this->users->find($id);
-        $users->update($users);
-        return redirect()->route('/admin');
+        
+        $user = $this->users->find($id);
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'img'  => $img
+        ]);
+        
+        return redirect()->route('admin');
     }
 
 
