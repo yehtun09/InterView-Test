@@ -1,4 +1,98 @@
 
+
+            $lastId = User::latest('id')->value('id');
+            $genId = $lastId + 1;
+            $empid = str_pad($genId, 3, '0', STR_PAD_LEFT);
+
+re
+
+
+        dd("H");
+
+submit
+
+'admin.index'
+
+->with('success', 'Currency update successfully')
+
+
+        $currencyData = $request->validated();
+        // Retrieve the currency record using the provided ID
+
+
+        // Retrieve the currency record using the provided ID
+
+
+        dd("He");
+
+sset('/img/' .
+
+{{ route }}
+
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Employee Id</th>
+                    <th scope="col">email</th>
+                    <th scope="col">Img</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>{{ $users->name}}</td>
+                    <td>{{ $users->emp_code}}</td>
+                    <td>{{ $users->email}}</td>
+                    <td> <img src="{{ asset('/img/'.$users->img)}}" alt="" width="300px"></td>
+                </tr>
+            </tbody>
+        </table>
+
+ width="300px"
+
+
+                    <a href="{{ asset('/img/'.$users->img)}}" style="width: 100%">
+
+mployee Code
+
+
+                    <th>
+                    </th>
+
+
+                        <a class="btn btn-primary" href="{{ route('user.edit',$users->id)}}">Edit</a>
+                        <form action="{{ route('users-delete', $users->id) }}" method="post">
+                            @csrf
+                            @method('delete')
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                            </div>
+                        </form>
+
+
+
+
+
+
+                @endforeach
+
+
+                @foreach ($users as $users)
+
+'admin.currency.edit'
+
+
+        dd("Hello World");
+
+delete
+
+container
+
+
                 <tr>
                     <th scope="row">2</th>
                     <td>Jacob</td>

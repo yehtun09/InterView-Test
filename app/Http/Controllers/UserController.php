@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -66,7 +67,8 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $users = $this->users->find($id);
+        return view('Admin.edit', compact('users'));
     }
 
     /**
@@ -76,10 +78,23 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(RegisterRequest $request, $id)
     {
-        //
+        dd($request->all());
+        if($request->img)
+        {
+            $imageName = time().'.'.$request->img->extension();
+            $request->img->move(public_path('img'), $imageName);
+        }else
+        {
+
+        }
+
+        $users = $this->users->find($id);
+        $users->update($users);
+        return redirect()->route('/admin');
     }
+
 
     /**
      * Remove the specified resource from storage.

@@ -33,6 +33,9 @@ Route::group(['namespace' => 'App/Http/Controllers'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
     Route::get('/admin',[ UserController::class , 'index']);
     Route::delete('user-delete/{id}', [UserController::class, 'destroy'])->name('user-delete');
+    Route::get('user-edit/{id}', [UserController::class, 'edit'])->name('user.edit');
+    Route::put('user-update/{id}', [UserController::class, 'update'])->name('user-update');
+
 
 
     Route::group(['middleware' => ['guest']], function () {
